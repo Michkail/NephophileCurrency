@@ -1,0 +1,1 @@
+### This currency is dedicated to reminiscence the figure of Amy
