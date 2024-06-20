@@ -4,7 +4,7 @@ use crate::application::repositories::BlockchainRepository;
 pub struct FileStorage;
 
 impl BlockchainRepository for FileStorage {
-    fn save_block(&self, block: &Block) {
+    fn save_block(&self, _block: &Block) {
         // Implementasi penyimpanan blockchain ke file
     }
 

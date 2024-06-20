@@ -5,7 +5,7 @@ pub struct Transaction {
     pub amount: u64,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Block {
     pub index: u64,
     pub previous_hash: String,

@@ -3,13 +3,16 @@ use crate::domain::services::Blockchain;
 use crate::application::repositories::BlockchainRepository;
 
 pub struct BlockchainInteractor<R: BlockchainRepository> {
-    blockchain: Blockchain,
-    repository: R,
+    pub blockchain: Blockchain,
+    pub repository: R,
 }
 
 impl<R: BlockchainRepository> BlockchainInteractor<R> {
-    pub fn new(blockchain: Blockchain, repository: R) -> BlockchainInteractor<R> {
-        BlockchainInteractor { blockchain, repository }
+    pub fn new(blockchain: Blockchain, repository: R) -> Self {
+        BlockchainInteractor {
+            blockchain,
+            repository,
+        }
     }
 
     pub fn add_transaction(&mut self, transaction: Transaction) {
@@ -18,7 +21,8 @@ impl<R: BlockchainRepository> BlockchainInteractor<R> {
 
     pub fn mine_block(&mut self) {
         self.blockchain.mine_block();
-        let last_block = self.blockchain.blocks.last().unwrap();
-        self.repository.save_block(last_block);
+        for block in &self.blockchain.blocks {
+            self.repository.save_block(block);
+        }
     }
 }
