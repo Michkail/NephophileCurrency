@@ -1,30 +1,32 @@
+use actix_web::{web, App, HttpServer};
+use dotenv::dotenv;
+use std::env;
+use uuid::Uuid;
+use crate::infrastructure::database::establish_connection;
+use crate::adapters::controllers::BlockchainController;
+use crate::application::usecases::BlockchainInteractor;
+use crate::application::repositories::PostgresRepository;
+
+mod adapters;
 mod application;
 mod domain;
 mod infrastructure;
-mod adapters;
 
-use domain::services::Blockchain;
-use adapters::controllers::BlockchainController;
-use application::usecases::interactor::BlockchainInteractor;
-use infrastructure::persistence::FileStorage;
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    dotenv().ok();
+    let pool = establish_connection();
 
-fn main() {
-    let mut blockchain = Blockchain::new();
-    blockchain.create_genesis_block();
+    let interactor = BlockchainInteractor::new(PostgresRepository { conn: &pool.get().unwrap() });
+    let controller = BlockchainController::new(interactor);
 
-    let storage = FileStorage;
-    let interactor = BlockchainInteractor::new(blockchain, storage);
-    let mut controller = BlockchainController::new(interactor);
-
-    controller.add_transaction("Alice".to_string(), "Bob".to_string(), 50);
-    controller.add_transaction("Bob".to_string(), "Charlie".to_string(), 30);
-    println!("Mining block...");
-    controller.mine_block();
-
-    controller.add_transaction("Charlie".to_string(), "Dave".to_string(), 20);
-    println!("Mining block...");
-    controller.mine_block();
-
-    // Output atau logika lain
-    println!("Current blockchain: {:?}", controller.get_blocks());
+    HttpServer::new(move || {
+        App::new()
+            .data(pool.clone())
+            .route("/blocks", web::post().to(move |block| controller.add_block(block)))
+            .route("/blocks", web::get().to(move || controller.get_blocks()))
+    })
+    .bind("127.0.0.1:8080")?
+    .run()
+    .await
 }

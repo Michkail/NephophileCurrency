@@ -1,26 +1,27 @@
-use crate::domain::entities::{Block, Transaction};
-use crate::application::usecases::interactor::BlockchainInteractor;
-use crate::application::repositories::BlockchainRepository;
+use actix_web::{web, HttpResponse};
+use uuid::Uuid;
+use crate::application::usecases::BlockchainInteractor;
+use crate::adapters::gateways::postgres::models::Block;
 
-pub struct BlockchainController<R: BlockchainRepository> {
+pub struct BlockchainController<R> {
     interactor: BlockchainInteractor<R>,
 }
 
-impl<R: BlockchainRepository> BlockchainController<R> {
-    pub fn new(interactor: BlockchainInteractor<R>) -> BlockchainController<R> {
-        BlockchainController { interactor }
+impl<R> BlockchainController<R>
+where
+    R: 'static + Send + Sync + crate::application::repositories::BlockchainRepository,
+{
+    pub fn new(interactor: BlockchainInteractor<R>) -> Self {
+        Self { interactor }
     }
 
-    pub fn add_transaction(&mut self, sender: String, receiver: String, amount: u64) {
-        let transaction = Transaction { sender, receiver, amount };
-        self.interactor.add_transaction(transaction);
+    pub async fn add_block(&self, block: web::Json<Block>) -> HttpResponse {
+        // Convert web::Json<Block> to domain Block and call interactor
+        HttpResponse::Ok().finish()
     }
 
-    pub fn mine_block(&mut self) {
-        self.interactor.mine_block();
-    }
-
-    pub fn get_blocks(&self) -> &Vec<Block> {
-        &self.interactor.blockchain.blocks
+    pub async fn get_blocks(&self) -> HttpResponse {
+        let blocks = self.interactor.get_blocks();
+        HttpResponse::Ok().json(blocks)
     }
 }

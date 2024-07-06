@@ -1,28 +1,20 @@
-use crate::domain::entities::Transaction;
-use crate::domain::services::Blockchain;
 use crate::application::repositories::BlockchainRepository;
+use crate::domain::entities::{Block, Transaction};
 
 pub struct BlockchainInteractor<R: BlockchainRepository> {
-    pub blockchain: Blockchain,
-    pub repository: R,
+    repository: R,
 }
 
 impl<R: BlockchainRepository> BlockchainInteractor<R> {
-    pub fn new(blockchain: Blockchain, repository: R) -> Self {
-        BlockchainInteractor {
-            blockchain,
-            repository,
-        }
+    pub fn new(repository: R) -> Self {
+        Self { repository }
     }
 
-    pub fn add_transaction(&mut self, transaction: Transaction) {
-        self.blockchain.add_transaction(transaction);
+    pub fn add_block(&self, block: Block) {
+        self.repository.save_block(&block);
     }
 
-    pub fn mine_block(&mut self) {
-        self.blockchain.mine_block();
-        for block in &self.blockchain.blocks {
-            self.repository.save_block(block);
-        }
+    pub fn get_blocks(&self) -> Vec<Block> {
+        self.repository.load_blocks()
     }
 }

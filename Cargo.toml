@@ -5,3 +5,10 @@ edition = "2021"
 
 [dependencies]
 sha2 = "0.10.0"
+uuid = { version = "1.3.0", features = ["v4"] }
+serde = { version = "1.0.203", features = ["derive"] }
+chrono = "0.4.38"
+diesel = { version = "2.0.0", features = ["postgres", "r2d2", "chrono"] }
+actix-web = "4.0"
+dotenv = "0.15.0"
+bcrypt = "0.15.1"

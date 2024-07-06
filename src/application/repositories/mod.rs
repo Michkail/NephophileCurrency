@@ -1,3 +1,5 @@
+mod repositories;
+
 use crate::domain::entities::Block;
 
 pub trait BlockchainRepository {
