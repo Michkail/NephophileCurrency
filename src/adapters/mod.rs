@@ -1,2 +1,2 @@
 pub mod controllers;
-mod gateways;
+pub(crate) mod gateways;

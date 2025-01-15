@@ -1,15 +1,15 @@
 use super::entities::{Block, Transaction};
 use sha2::{Sha256, Digest};
 
-pub struct Blockchain {
+pub struct BlockchainRepository {
     pub blocks: Vec<Block>,
     pub pending_transactions: Vec<Transaction>,
     pub difficulty: usize,
 }
 
-impl Blockchain {
-    pub fn new() -> Blockchain {
-        Blockchain {
+impl BlockchainRepository {
+    pub fn new() -> BlockchainRepository {
+        BlockchainRepository {
             blocks: vec![],
             pending_transactions: vec![],
             difficulty: 4,

@@ -1,2 +1,2 @@
 pub mod persistence;
-mod database;
+pub(crate) mod database;

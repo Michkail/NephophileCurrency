@@ -1,11 +1,11 @@
 use crate::application::repositories::BlockchainRepository;
-use crate::domain::entities::{Block, Transaction};
+use crate::domain::entities::{Block};
 
-pub struct BlockchainInteractor<R: BlockchainRepository> {
+pub struct BlockchainInteraction<R: BlockchainRepository> {
     repository: R,
 }
 
-impl<R: BlockchainRepository> BlockchainInteractor<R> {
+impl<R: BlockchainRepository> BlockchainInteraction<R> {
     pub fn new(repository: R) -> Self {
         Self { repository }
     }

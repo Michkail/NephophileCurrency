@@ -1,9 +1,5 @@
-use uuid::Uuid;
-use crate::adapters::gateways::postgres::models::{Block, Transaction, User};
 use crate::domain::entities::Block as DomainBlock;
-use crate::domain::entities::Transaction as DomainTransaction;
-use crate::domain::services::BlockchainRepository;
-use diesel::prelude::*;
+use crate::application::repositories::BlockchainRepository;
 use diesel::PgConnection;
 
 pub struct PostgresRepository<'a> {

@@ -1,4 +1,4 @@
-mod repositories;
+pub(crate) mod repositories;
 
 use crate::domain::entities::Block;
 

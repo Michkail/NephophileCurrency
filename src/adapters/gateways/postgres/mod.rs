@@ -1,2 +1,2 @@
 mod schema;
-mod models;
+pub(crate) mod models;
